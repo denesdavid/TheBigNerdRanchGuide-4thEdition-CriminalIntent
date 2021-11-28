@@ -50,14 +50,10 @@ public class CrimeRepository {
     }
 
     void updateCrime(Crime crime){
-        executor.execute(() -> {
-                crimeDao.updateCrime(crime);
-        });
+        executor.execute(() -> crimeDao.updateCrime(crime));
     }
 
     void addCrime(Crime crime){
-        executor.execute(() -> {
-            crimeDao.addCrime(crime);
-        });
+        executor.execute(() -> crimeDao.addCrime(crime));
     }
 }

@@ -3,24 +3,17 @@ package com.bignerdranch.android.criminalintent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentResultListener;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,7 +29,6 @@ public class CrimeFragment extends Fragment {
     private Button dateButton;
     private Button timeButton;
     private CheckBox solvedCheckBox;
-    private final String TAG = "CrimeFragment";
     private final String DIALOG_DATE= "DialogDate";
     private final String DIALOG_TIME= "DialogTime";
     public final static String REQUEST_DATE = "request_date";

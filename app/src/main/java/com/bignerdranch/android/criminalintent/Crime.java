@@ -1,9 +1,6 @@
 package com.bignerdranch.android.criminalintent;
 
-import android.annotation.SuppressLint;
-
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 

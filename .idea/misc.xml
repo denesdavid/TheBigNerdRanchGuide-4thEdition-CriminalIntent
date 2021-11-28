@@ -5,9 +5,10 @@
       <map>
         <entry key="..\:/Users/Darius/AndroidStudioProjects/CriminalIntent/app/src/main/res/layout/activity_main.xml" value="0.276268115942029" />
         <entry key="..\:/Users/Darius/AndroidStudioProjects/CriminalIntent/app/src/main/res/layout/fragment_crime.xml" value="0.2957427536231884" />
-        <entry key="..\:/Users/Darius/AndroidStudioProjects/CriminalIntent/app/src/main/res/layout/fragment_crime_list.xml" value="0.20520833333333333" />
-        <entry key="..\:/Users/Darius/AndroidStudioProjects/CriminalIntent/app/src/main/res/layout/list_item_crime.xml" value="0.67" />
+        <entry key="..\:/Users/Darius/AndroidStudioProjects/CriminalIntent/app/src/main/res/layout/fragment_crime_list.xml" value="0.403125" />
+        <entry key="..\:/Users/Darius/AndroidStudioProjects/CriminalIntent/app/src/main/res/layout/list_item_crime.xml" value="0.4739413680781759" />
         <entry key="..\:/Users/Darius/AndroidStudioProjects/CriminalIntent/app/src/main/res/layout/list_item_police_required.xml" value="1.0" />
+        <entry key="..\:/Users/Darius/AndroidStudioProjects/CriminalIntent/app/src/main/res/menu/fragment_crime_list.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>

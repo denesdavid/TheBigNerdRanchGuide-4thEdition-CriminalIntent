@@ -1,12 +1,14 @@
 package com.bignerdranch.android.criminalintent;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -33,11 +34,12 @@ public class CrimeListFragment extends Fragment {
     }
 
     private Callbacks callbacks;
-    private final String TAG = "CrimeListFragment";
     CrimeListViewModel crimeListViewModel;
     CrimeAdapter crimeAdapter;
 
     RecyclerView crimeRecyclerView;
+    TextView noCrimesTextView;
+    Button newCrimeButton;
 
     private CrimeListFragment () {
         crimeAdapter = new CrimeAdapter(crimeItemCallback);
@@ -59,6 +61,7 @@ public class CrimeListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         crimeListViewModel = new ViewModelProvider(this).get(CrimeListViewModel.class);
+        setHasOptionsMenu(true);
        // Log.d(TAG, "Total crimes: " + crimeListViewModel.crimes.size());
     }
 
@@ -88,7 +91,27 @@ public class CrimeListFragment extends Fragment {
             }
         };*/
         //updateUI();
-        crimeListViewModel.crimeListLiveData.observe(getViewLifecycleOwner(), list -> updateUI(list));
+        noCrimesTextView = view.findViewById(R.id.no_crimes_textview);
+        newCrimeButton = view.findViewById(R.id.new_crime_button);
+        crimeListViewModel.crimeListLiveData.observe(getViewLifecycleOwner(), this::updateUI);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_crime_list, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.new_crime){
+            Crime crime = new Crime();
+            crimeListViewModel.addCrime(crime);
+            callbacks.onCrimeSelected(crime.id);
+            return  true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     private void updateUI(List<Crime> crimes) {
@@ -97,6 +120,19 @@ public class CrimeListFragment extends Fragment {
             crimeAdapter = new CrimeAdapter(crimes);
         }
 */
+        if (crimes.size() > 0){
+            newCrimeButton.setVisibility(View.INVISIBLE);
+            noCrimesTextView.setVisibility(View.INVISIBLE);
+        } else {
+            newCrimeButton.setOnClickListener(v -> {
+                Crime crime = new Crime();
+                crimeListViewModel.addCrime(crime);
+                callbacks.onCrimeSelected(crime.id);
+            });
+            newCrimeButton.setVisibility(View.VISIBLE);
+            noCrimesTextView.setVisibility(View.VISIBLE);
+        }
+
         crimeAdapter.submitList(crimes);
         //crimeRecyclerView.setAdapter(crimeAdapter);
     }

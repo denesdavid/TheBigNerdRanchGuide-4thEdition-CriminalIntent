@@ -29,17 +29,21 @@ public class DatePickerFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
         Date date = (Date) getArguments().getSerializable(ARG_DATE);
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        int initialYear = calendar.get(calendar.YEAR);
-        int initialMonth = calendar.get(calendar.MONTH);
-        int initialDay = calendar.get(calendar.DAY_OF_MONTH);
+
+        int initialYear = calendar.get(Calendar.YEAR);
+        int initialMonth = calendar.get(Calendar.MONTH);
+        int initialDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int initialHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int initialMinute = calendar.get(Calendar.MINUTE);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), null, initialYear, initialMonth, initialDay);
 
 
         datePickerDialog.setOnDateSetListener((datePicker, i, i1, i2) -> {
-            Date resultDate = new GregorianCalendar(i, i1, i2).getTime();
+            Date resultDate = new GregorianCalendar(i, i1, i2, initialHour, initialMinute).getTime();
             SendResult(resultDate);
         });
 

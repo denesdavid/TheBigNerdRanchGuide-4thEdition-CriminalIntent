@@ -38,6 +38,12 @@
         tools:text="11:56"/>
 
     <CheckBox
+        android:id="@+id/requires_police"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/requires_police_label"/>
+
+    <CheckBox
         android:id="@+id/crime_solved"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

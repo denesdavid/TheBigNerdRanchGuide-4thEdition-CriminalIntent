@@ -30,11 +30,14 @@ public class TimePickerFragment extends DialogFragment {
         Date date = (Date) getArguments().getSerializable(ARG_TIME);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
+        int initialYear = calendar.get(Calendar.YEAR);
+        int initialMonth = calendar.get(Calendar.MONTH);
+        int initialDay = calendar.get(Calendar.DAY_OF_MONTH);
         int hours = Calendar.HOUR;
         int minutes = Calendar.MINUTE;
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(requireContext(), (timePicker, i, i1) -> {
-            Date resultDate = new GregorianCalendar(calendar.YEAR, calendar.MONTH, calendar.DAY_OF_MONTH, i, i1).getTime();
+            Date resultDate = new GregorianCalendar(initialYear, initialMonth, initialDay, i, i1).getTime();
             SendResult(resultDate);
         }, hours, minutes, true);
 

@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,8 +31,9 @@ public class CrimeFragment extends Fragment {
     private Button dateButton;
     private Button timeButton;
     private CheckBox solvedCheckBox;
-    private final String DIALOG_DATE= "DialogDate";
-    private final String DIALOG_TIME= "DialogTime";
+    private CheckBox requiresPoliceCheckBox;
+    private final String DIALOG_DATE = "DialogDate";
+    private final String DIALOG_TIME = "DialogTime";
     public final static String REQUEST_DATE = "request_date";
     public final static String REQUEST_TIME = "request_time";
     private static final String ARG_CRIME_ID = "crime_id";
@@ -60,6 +63,7 @@ public class CrimeFragment extends Fragment {
         dateButton = view.findViewById(R.id.crime_date);
         timeButton = view.findViewById(R.id.crime_time);
         solvedCheckBox = view.findViewById(R.id.crime_solved);
+        requiresPoliceCheckBox = view.findViewById(R.id.requires_police);
 
         return view;
     }
@@ -97,7 +101,21 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        solvedCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> crime.setSolved(isChecked));
+        solvedCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            crime.setSolved(isChecked);
+            requiresPoliceCheckBox.setEnabled(!isChecked);
+            if (isChecked) {
+                requiresPoliceCheckBox.setChecked(false);
+            }
+        });
+
+        requiresPoliceCheckBox.setOnCheckedChangeListener(((buttonView, isChecked) -> {
+            crime.setRequiresPolice(isChecked);
+            if (isChecked) {
+                solvedCheckBox.setChecked(false);
+            }
+        }
+        ));
 
         dateButton.setOnClickListener(view -> {
             DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(crime.getDate());
@@ -126,18 +144,20 @@ public class CrimeFragment extends Fragment {
 
     //endregion
 
-    void updateUI(){
+    void updateUI() {
         titleField.setText(crime.getTitle());
         SimpleDateFormat dt = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.US);
-        SimpleDateFormat dt2 = new SimpleDateFormat("H:m", Locale.US);
+        SimpleDateFormat dt2 = new SimpleDateFormat("HH:mm", Locale.US);
         dateButton.setText(dt.format(this.crime.getDate()));
-        //dateButton.setText(crime.getDate().toString());
         timeButton.setText(dt2.format(this.crime.getDate()));
         solvedCheckBox.setChecked(crime.isSolved());
+        requiresPoliceCheckBox.setChecked(crime.requiresPolice);
+
         solvedCheckBox.jumpDrawablesToCurrentState();
+        requiresPoliceCheckBox.jumpDrawablesToCurrentState();
     }
 
-    public static CrimeFragment newInstance(UUID crimeID){
+    public static CrimeFragment newInstance(UUID crimeID) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(ARG_CRIME_ID, crimeID);
         CrimeFragment crimeFragment = new CrimeFragment();

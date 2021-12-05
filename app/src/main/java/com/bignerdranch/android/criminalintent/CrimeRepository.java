@@ -37,7 +37,7 @@ public class CrimeRepository {
     }
 
     private CrimeRepository(Context context){
-        database = Room.databaseBuilder(context.getApplicationContext(),CrimeDatabase.class,DATABASE_NAME).build();
+        database = Room.databaseBuilder(context.getApplicationContext(),CrimeDatabase.class,DATABASE_NAME).addMigrations(CrimeDatabase.MIGRATION_1_2).build();
         crimeDao = database.crimeDao();
     }
 

@@ -20,6 +20,7 @@ public class Crime {
     private Date date;
     private boolean isSolved = false;
     public boolean requiresPolice = false;
+    private String suspect = "";
 
     //endregion
 
@@ -61,6 +62,14 @@ public class Crime {
         this.requiresPolice = value;
     }
 
+    public String getSuspect() {
+        return suspect;
+    }
+
+    public void setSuspect(String suspect) {
+        this.suspect = suspect;
+    }
+
     //endregion
 
     //region Constructor
@@ -76,12 +85,12 @@ public class Crime {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Crime crime = (Crime) o;
-        return isSolved == crime.isSolved && requiresPolice == crime.requiresPolice && title.equals(crime.title) && date.equals(crime.date);
+        return isSolved == crime.isSolved && requiresPolice == crime.requiresPolice && title.equals(crime.title) && date.equals(crime.date) && suspect.equals(crime.suspect);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, date, isSolved, requiresPolice);
+        return Objects.hash(title, date, isSolved, requiresPolice, suspect);
     }
 
    /* public static final DiffUtil.ItemCallback<Crime> DIFF_CALLBACK =

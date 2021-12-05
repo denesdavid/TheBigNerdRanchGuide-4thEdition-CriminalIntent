@@ -1,5 +1,6 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.text.format.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -32,11 +34,13 @@ public class CrimeFragment extends Fragment {
     private Button timeButton;
     private CheckBox solvedCheckBox;
     private CheckBox requiresPoliceCheckBox;
+    private Button reportButton;
     private final String DIALOG_DATE = "DialogDate";
     private final String DIALOG_TIME = "DialogTime";
     public final static String REQUEST_DATE = "request_date";
     public final static String REQUEST_TIME = "request_time";
     private static final String ARG_CRIME_ID = "crime_id";
+    private static final String DATE_FORMAT = "EEE, MMM, dd";
     private CrimeDetailViewModel crimeDetailViewModel;
 
     //endregion
@@ -64,6 +68,7 @@ public class CrimeFragment extends Fragment {
         timeButton = view.findViewById(R.id.crime_time);
         solvedCheckBox = view.findViewById(R.id.crime_solved);
         requiresPoliceCheckBox = view.findViewById(R.id.requires_police);
+        reportButton = view.findViewById(R.id.crime_report);
 
         return view;
     }
@@ -134,6 +139,15 @@ public class CrimeFragment extends Fragment {
             });
             timePickerFragment.show(getParentFragmentManager(), DIALOG_TIME);
         });
+
+        reportButton.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject));
+            intent = Intent.createChooser(intent, getString(R.string.send_report));
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -155,6 +169,26 @@ public class CrimeFragment extends Fragment {
 
         solvedCheckBox.jumpDrawablesToCurrentState();
         requiresPoliceCheckBox.jumpDrawablesToCurrentState();
+    }
+
+    private String getCrimeReport(){
+        String solvedString = "";
+        if (crime.isSolved()){
+            solvedString = getString(R.string.crime_report_solved);
+        } else {
+            solvedString = getString(R.string.crime_report_unsolved);
+        }
+
+        String dateString = DateFormat.format(DATE_FORMAT, crime.getDate()).toString();
+        String suspect = "";
+
+        if (crime.getSuspect() == null){
+            suspect = getString(R.string.crime_report_no_suspect);
+        } else {
+            getString(R.string.crime_report_suspect, crime.getSuspect());
+        }
+
+        return getString(R.string.crime_report, crime.getTitle(), dateString, solvedString, suspect);
     }
 
     public static CrimeFragment newInstance(UUID crimeID) {

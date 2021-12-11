@@ -1,6 +1,8 @@
 package com.bignerdranch.android.criminalintent;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -55,7 +57,6 @@ public class CrimeFragment extends Fragment {
     private Button suspectButton;
     private CrimeDetailViewModel crimeDetailViewModel;
     ActivityResultLauncher<Void> contactResultLauncher;
-    Intent pickContactIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
 
     //endregion
 

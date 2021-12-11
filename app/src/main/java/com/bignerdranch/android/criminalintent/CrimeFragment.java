@@ -1,5 +1,7 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -29,6 +31,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.format.DateFormat;
+
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -55,8 +58,11 @@ public class CrimeFragment extends Fragment {
     private CheckBox requiresPoliceCheckBox;
     private Button reportButton;
     private Button suspectButton;
+    private Button callSuspectButton;
     private CrimeDetailViewModel crimeDetailViewModel;
     ActivityResultLauncher<Void> contactResultLauncher;
+    ActivityResultLauncher<String> requestPermissionLauncher;
+
 
     //endregion
 
@@ -81,8 +87,21 @@ public class CrimeFragment extends Fragment {
         crimeDetailViewModel.loadCrime(crimeID);
 
 
-       contactResultLauncher = registerForActivityResult(new ActivityResultContracts.PickContact(), result -> {
+        contactResultLauncher = registerForActivityResult(new ActivityResultContracts.PickContact(), result -> {
             setSuspect(result);
+        });
+
+        // Register the permissions callback, which handles the user's response to the
+// system permissions dialog. Save the return value, an instance of
+// ActivityResultLauncher, as an instance variable.
+        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (isGranted) {
+                callSuspect();
+                // Permission is granted. Continue the action or workflow in your
+                // app.
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.READ_CONTACTS);
+            }
         });
     }
 
@@ -97,6 +116,7 @@ public class CrimeFragment extends Fragment {
         requiresPoliceCheckBox = view.findViewById(R.id.requires_police);
         reportButton = view.findViewById(R.id.crime_report);
         suspectButton = view.findViewById(R.id.crime_suspect);
+        callSuspectButton = view.findViewById(R.id.call_suspect);
 
         return view;
     }
@@ -176,8 +196,10 @@ public class CrimeFragment extends Fragment {
             startActivity(intent);
         });
 
-        suspectButton.setOnClickListener(view -> {
-            contactResultLauncher.launch(null);
+        suspectButton.setOnClickListener(view -> contactResultLauncher.launch(null));
+
+        callSuspectButton.setOnClickListener(view -> {
+            requestPermissionLauncher.launch(Manifest.permission.READ_CONTACTS);
         });
     }
 
@@ -198,7 +220,7 @@ public class CrimeFragment extends Fragment {
         solvedCheckBox.setChecked(crime.isSolved());
         requiresPoliceCheckBox.setChecked(crime.requiresPolice);
 
-        if (crime.getSuspect() != null && crime.getSuspect() != "" ) {
+        if (crime.getSuspect() != null && crime.getSuspect() != "") {
             suspectButton.setText(crime.getSuspect());
         }
 
@@ -222,9 +244,25 @@ public class CrimeFragment extends Fragment {
         suspectButton.setText(suspect);
     }
 
-    private String getCrimeReport(){
+    void callSuspect(){
+        ContentResolver contentResolver = requireActivity().getContentResolver();
+        Cursor cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " = " + "\"" +crime.getSuspect() + "\"",
+                null,
+                null);
+        cursor.moveToFirst();
+        String number = "";
+        int index = cursor.getColumnIndex("data1");
+        if (index > -1){
+            number = cursor.getString(index);
+        }
+
+        cursor.close();
+    }
+
+    private String getCrimeReport() {
         String solvedString = "";
-        if (crime.isSolved()){
+        if (crime.isSolved()) {
             solvedString = getString(R.string.crime_report_solved);
         } else {
             solvedString = getString(R.string.crime_report_unsolved);
@@ -233,7 +271,7 @@ public class CrimeFragment extends Fragment {
         String dateString = DateFormat.format(DATE_FORMAT, crime.getDate()).toString();
         String suspect = "";
 
-        if (crime.getSuspect() == null){
+        if (crime.getSuspect() == null) {
             suspect = getString(R.string.crime_report_no_suspect);
         } else {
             getString(R.string.crime_report_suspect, crime.getSuspect());

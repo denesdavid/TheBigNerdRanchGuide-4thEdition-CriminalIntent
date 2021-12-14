@@ -252,12 +252,16 @@ public class CrimeFragment extends Fragment {
                 null);
         cursor.moveToFirst();
         String number = "";
-        int index = cursor.getColumnIndex("data1");
+        int index = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA1);
         if (index > -1){
             number = cursor.getString(index);
         }
 
         cursor.close();
+
+        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+        callIntent.setData(Uri.parse("tel:"+number));
+        startActivity(callIntent);
     }
 
     private String getCrimeReport() {

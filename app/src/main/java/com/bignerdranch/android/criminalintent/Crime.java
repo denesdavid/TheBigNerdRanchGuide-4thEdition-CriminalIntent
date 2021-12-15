@@ -21,6 +21,7 @@ public class Crime {
     private boolean isSolved = false;
     public boolean requiresPolice = false;
     private String suspect = "";
+   // private String photoFileName = "dummy";
 
     //endregion
 
@@ -68,6 +69,10 @@ public class Crime {
 
     public void setSuspect(String suspect) {
         this.suspect = suspect;
+    }
+
+    public String getPhotoFileName(){
+        return "IMG_" + id + ".jpg";
     }
 
     //endregion

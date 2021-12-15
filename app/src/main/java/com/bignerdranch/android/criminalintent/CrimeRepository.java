@@ -8,6 +8,7 @@ import androidx.room.Room;
 import com.bignerdranch.android.criminalintent.database.CrimeDao;
 import com.bignerdranch.android.criminalintent.database.CrimeDatabase;
 
+import java.io.File;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executor;
@@ -18,9 +19,11 @@ public class CrimeRepository {
     final String DATABASE_NAME = "crime-database";
     private static CrimeRepository INSTANCE;
     private Executor executor = Executors.newSingleThreadExecutor();
+    private File filesDir;
 
     private CrimeDatabase database;
     private CrimeDao crimeDao;
+
 
     public static void Initialize(Context context){
         if (INSTANCE == null){
@@ -39,6 +42,7 @@ public class CrimeRepository {
     private CrimeRepository(Context context){
         database = Room.databaseBuilder(context.getApplicationContext(),CrimeDatabase.class,DATABASE_NAME).addMigrations(CrimeDatabase.MIGRATION_1_2).build();
         crimeDao = database.crimeDao();
+        filesDir = context.getApplicationContext().getFilesDir();
     }
 
     LiveData<List<Crime>> getCrimes(){
@@ -55,5 +59,9 @@ public class CrimeRepository {
 
     void addCrime(Crime crime){
         executor.execute(() -> crimeDao.addCrime(crime));
+    }
+
+    File getPhotoFile(Crime crime){
+        return new File(filesDir, crime.getPhotoFileName());
     }
 }

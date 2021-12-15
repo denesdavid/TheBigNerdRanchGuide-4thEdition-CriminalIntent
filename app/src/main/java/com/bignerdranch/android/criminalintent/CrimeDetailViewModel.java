@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import java.io.File;
 import java.util.UUID;
 
 public class CrimeDetailViewModel extends ViewModel {
@@ -22,5 +23,9 @@ public class CrimeDetailViewModel extends ViewModel {
 
     void saveCrime(Crime crime){
         crimeRepository.updateCrime(crime);
+    }
+
+    File getPhotoFile(Crime crime){
+        return crimeRepository.getPhotoFile(crime);
     }
 }

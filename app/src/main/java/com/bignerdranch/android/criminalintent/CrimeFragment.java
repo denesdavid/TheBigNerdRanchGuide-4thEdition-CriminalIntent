@@ -2,40 +2,46 @@ package com.bignerdranch.android.criminalintent;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
+import android.graphics.Camera;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CameraManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.RadioGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultCaller;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.format.DateFormat;
+import android.widget.Toast;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -45,12 +51,16 @@ public class CrimeFragment extends Fragment {
 
     public final static String REQUEST_DATE = "request_date";
     public final static String REQUEST_TIME = "request_time";
-    public final static int REQUEST_CONTACT = 1;
     private static final String ARG_CRIME_ID = "crime_id";
     private static final String DATE_FORMAT = "EEE, MMM, dd";
     private final String DIALOG_DATE = "DialogDate";
     private final String DIALOG_TIME = "DialogTime";
+    ActivityResultLauncher<Void> contactResultLauncher;
+    ActivityResultLauncher<String> requestContactsPermissionLauncher;
+    ActivityResultLauncher<Uri> cameraResultLauncher;
     private Crime crime;
+    private File photoFile;
+    private Uri photoUri;
     private EditText titleField;
     private Button dateButton;
     private Button timeButton;
@@ -59,10 +69,9 @@ public class CrimeFragment extends Fragment {
     private Button reportButton;
     private Button suspectButton;
     private Button callSuspectButton;
+    private ImageButton photoButton;
+    private ImageView photoView;
     private CrimeDetailViewModel crimeDetailViewModel;
-    ActivityResultLauncher<Void> contactResultLauncher;
-    ActivityResultLauncher<String> requestPermissionLauncher;
-
 
     //endregion
 
@@ -79,29 +88,35 @@ public class CrimeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        crimeDetailViewModel = new ViewModelProvider(this).get(CrimeDetailViewModel.class);
 
         crime = new Crime();
         UUID crimeID = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
 
+        crimeDetailViewModel = new ViewModelProvider(this).get(CrimeDetailViewModel.class);
         crimeDetailViewModel.loadCrime(crimeID);
-
 
         contactResultLauncher = registerForActivityResult(new ActivityResultContracts.PickContact(), result -> {
             setSuspect(result);
         });
 
         // Register the permissions callback, which handles the user's response to the
-// system permissions dialog. Save the return value, an instance of
-// ActivityResultLauncher, as an instance variable.
-        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+        // system permissions dialog. Save the return value, an instance of
+        // ActivityResultLauncher, as an instance variable.
+        requestContactsPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
             if (isGranted) {
                 callSuspect();
                 // Permission is granted. Continue the action or workflow in your
                 // app.
             } else {
-                requestPermissionLauncher.launch(Manifest.permission.READ_CONTACTS);
+                requestContactsPermissionLauncher.launch(Manifest.permission.READ_CONTACTS);
             }
+        });
+
+        cameraResultLauncher = registerForActivityResult(new ActivityResultContracts.TakePicture(), result -> {
+            if (result){
+                Log.i("CAMERA", "Photo taken");
+            }
+
         });
     }
 
@@ -117,6 +132,8 @@ public class CrimeFragment extends Fragment {
         reportButton = view.findViewById(R.id.crime_report);
         suspectButton = view.findViewById(R.id.crime_suspect);
         callSuspectButton = view.findViewById(R.id.call_suspect);
+        photoButton = view.findViewById(R.id.crime_camera);
+        photoView = view.findViewById(R.id.crime_photo);
 
         return view;
     }
@@ -128,6 +145,10 @@ public class CrimeFragment extends Fragment {
                 getViewLifecycleOwner(),
                 crime -> {
                     this.crime = crime;
+                    photoFile = crimeDetailViewModel.getPhotoFile(crime);
+                    photoUri = FileProvider.getUriForFile(requireContext(),
+                            "com.bignerdranch.android.criminalintent.fileprovider",
+                            photoFile);
                     updateUI();
                 }
         );
@@ -199,17 +220,33 @@ public class CrimeFragment extends Fragment {
         suspectButton.setOnClickListener(view -> contactResultLauncher.launch(null));
 
         callSuspectButton.setOnClickListener(view -> {
-            requestPermissionLauncher.launch(Manifest.permission.READ_CONTACTS);
+            requestContactsPermissionLauncher.launch(Manifest.permission.READ_CONTACTS);
+        });
+
+        photoButton.setOnClickListener(view -> {
+            PackageManager packageManager = requireContext().getPackageManager();
+            try {
+                if (((CameraManager)requireContext().getSystemService(Context.CAMERA_SERVICE)).getCameraIdList().length > 0 ) {
+                    cameraResultLauncher.launch(photoUri);
+                } else {
+                    Toast.makeText(requireContext(), "Camera is not presented on this device", Toast.LENGTH_LONG).show();
+                }
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
         });
     }
-
-    //endregion
 
     @Override
     public void onStop() {
         super.onStop();
         crimeDetailViewModel.saveCrime(crime);
     }
+
+
+    //endregion
+
+    //region Methods
 
     void updateUI() {
         titleField.setText(crime.getTitle());
@@ -283,5 +320,7 @@ public class CrimeFragment extends Fragment {
 
         return getString(R.string.crime_report, crime.getTitle(), dateString, solvedString, suspect);
     }
+
+    //endregion
 
 }

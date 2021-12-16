@@ -41,7 +41,7 @@ public class CrimeListFragment extends Fragment {
     TextView noCrimesTextView;
     Button newCrimeButton;
 
-    private CrimeListFragment () {
+    public CrimeListFragment () {
         crimeAdapter = new CrimeAdapter(crimeItemCallback);
     }
 
@@ -62,7 +62,6 @@ public class CrimeListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         crimeListViewModel = new ViewModelProvider(this).get(CrimeListViewModel.class);
         setHasOptionsMenu(true);
-       // Log.d(TAG, "Total crimes: " + crimeListViewModel.crimes.size());
     }
 
     @Nullable
@@ -73,24 +72,12 @@ public class CrimeListFragment extends Fragment {
         crimeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         crimeRecyclerView.setAdapter(crimeAdapter);
 
-        //updateUI();
-
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-       /* final androidx.lifecycle.Observer<List<Crime>> crimeObserver = crimes -> {
-            if (crimes != null) {
-                Log.i(TAG, "Got crimes ${crimes.size}");
-                updateUI(crimes);
-            } else {
-                updateUI(new ArrayList<>());
-            }
-        };*/
-        //updateUI();
         noCrimesTextView = view.findViewById(R.id.no_crimes_textview);
         newCrimeButton = view.findViewById(R.id.new_crime_button);
         crimeListViewModel.crimeListLiveData.observe(getViewLifecycleOwner(), this::updateUI);
@@ -115,11 +102,6 @@ public class CrimeListFragment extends Fragment {
     }
 
     private void updateUI(List<Crime> crimes) {
-        //List<Crime> crimes = crimeListViewModel.crimes;
-       /* if (crimeAdapter == null){
-            crimeAdapter = new CrimeAdapter(crimes);
-        }
-*/
         if (crimes.size() > 0){
             newCrimeButton.setVisibility(View.INVISIBLE);
             noCrimesTextView.setVisibility(View.INVISIBLE);
@@ -134,7 +116,6 @@ public class CrimeListFragment extends Fragment {
         }
 
         crimeAdapter.submitList(crimes);
-        //crimeRecyclerView.setAdapter(crimeAdapter);
     }
 
     public static CrimeListFragment newInstance(){

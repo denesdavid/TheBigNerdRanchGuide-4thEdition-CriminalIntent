@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraDevice;
@@ -96,7 +97,9 @@ public class CrimeFragment extends Fragment {
         crimeDetailViewModel.loadCrime(crimeID);
 
         contactResultLauncher = registerForActivityResult(new ActivityResultContracts.PickContact(), result -> {
-            setSuspect(result);
+            if (result != null){
+                setSuspect(result);
+            }
         });
 
         // Register the permissions callback, which handles the user's response to the
@@ -114,7 +117,7 @@ public class CrimeFragment extends Fragment {
 
         cameraResultLauncher = registerForActivityResult(new ActivityResultContracts.TakePicture(), result -> {
             if (result){
-                Log.i("CAMERA", "Photo taken");
+                updatePhotoView();
             }
 
         });
@@ -220,7 +223,12 @@ public class CrimeFragment extends Fragment {
         suspectButton.setOnClickListener(view -> contactResultLauncher.launch(null));
 
         callSuspectButton.setOnClickListener(view -> {
-            requestContactsPermissionLauncher.launch(Manifest.permission.READ_CONTACTS);
+            if (crime.getSuspect() != null && !crime.getSuspect().isEmpty()){
+                requestContactsPermissionLauncher.launch(Manifest.permission.READ_CONTACTS);
+            } else {
+                Toast.makeText(requireContext(), "Contact is not presented at this crime.", Toast.LENGTH_LONG).show();
+            }
+
         });
 
         photoButton.setOnClickListener(view -> {
@@ -229,7 +237,7 @@ public class CrimeFragment extends Fragment {
                 if (((CameraManager)requireContext().getSystemService(Context.CAMERA_SERVICE)).getCameraIdList().length > 0 ) {
                     cameraResultLauncher.launch(photoUri);
                 } else {
-                    Toast.makeText(requireContext(), "Camera is not presented on this device", Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireContext(), "Camera is not presented on this device.", Toast.LENGTH_LONG).show();
                 }
             } catch (CameraAccessException e) {
                 e.printStackTrace();
@@ -257,12 +265,24 @@ public class CrimeFragment extends Fragment {
         solvedCheckBox.setChecked(crime.isSolved());
         requiresPoliceCheckBox.setChecked(crime.requiresPolice);
 
-        if (crime.getSuspect() != null && crime.getSuspect() != "") {
+        if (crime.getSuspect() != null && !crime.getSuspect().isEmpty()) {
             suspectButton.setText(crime.getSuspect());
+        } else {
+            suspectButton.setText(R.string.crime_suspect_text);
         }
+        updatePhotoView();
 
         solvedCheckBox.jumpDrawablesToCurrentState();
         requiresPoliceCheckBox.jumpDrawablesToCurrentState();
+    }
+
+    void updatePhotoView(){
+        if (photoFile.exists()){
+            Bitmap bitmap = PictureUtils.getScaledBitmap(photoFile.getPath(), requireActivity());
+            photoView.setImageBitmap(bitmap);
+        } else {
+            photoView.setImageDrawable(null);
+        }
     }
 
     void setSuspect(Uri contactUri) {

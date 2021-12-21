@@ -8,7 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.bignerdranch.android.criminalintent.Crime;
 
-@Database(entities = Crime.class, version = 2, exportSchema = true)
+@Database(entities = Crime.class, version = 2)
 @TypeConverters(CrimeTypeConverters.class)
 public abstract class CrimeDatabase extends RoomDatabase {
 

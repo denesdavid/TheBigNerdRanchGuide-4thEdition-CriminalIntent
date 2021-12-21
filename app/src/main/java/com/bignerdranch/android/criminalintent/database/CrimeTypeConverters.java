@@ -8,7 +8,6 @@ import java.util.UUID;
 
 public class CrimeTypeConverters {
 
-    @NonNull
     @TypeConverter
     public long fromDate(Date date){
         return date.getTime();

@@ -36,12 +36,10 @@ public class TimePickerFragment extends DialogFragment {
         int hours = Calendar.HOUR;
         int minutes = Calendar.MINUTE;
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(requireContext(), (timePicker, i, i1) -> {
+        return new TimePickerDialog(requireContext(), (timePicker, i, i1) -> {
             Date resultDate = new GregorianCalendar(initialYear, initialMonth, initialDay, i, i1).getTime();
             SendResult(resultDate);
         }, hours, minutes, true);
-
-        return timePickerDialog;
     }
 
     private void SendResult(Date date){

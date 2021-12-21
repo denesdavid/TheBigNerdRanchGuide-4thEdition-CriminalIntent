@@ -10,8 +10,6 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements CrimeListFragment.Callbacks {
 
-    private final String TAG = "MainActivity";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements CrimeListFragment
 
     @Override
     public void onCrimeSelected(UUID crimeID) {
+        String TAG = "MainActivity";
         Log.d(TAG, "MainActivity.onCrimeSelected: " + crimeID);
         Fragment fragment = CrimeFragment.newInstance(crimeID);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)

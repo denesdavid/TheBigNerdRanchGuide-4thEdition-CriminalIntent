@@ -98,20 +98,4 @@ public class Crime {
         return Objects.hash(title, date, isSolved, requiresPolice, suspect);
     }
 
-   /* public static final DiffUtil.ItemCallback<Crime> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<Crime>() {
-                @Override
-                public boolean areItemsTheSame(
-                        @NonNull Crime oldCrime, @NonNull Crime newCrime) {
-                    // User properties may have changed if reloaded from the DB, but ID is fixed
-                    return oldCrime.getId() == newCrime.getId();
-                }
-                @Override
-                public boolean areContentsTheSame(
-                        @NonNull Crime oldCrime, @NonNull Crime newCrime) {
-                    // NOTE: if you use equals, your object must properly override Object#equals()
-                    // Incorrectly returning false here will result in too many animations.
-                    return oldCrime.equals(newCrime);
-                }
-            };*/
 }

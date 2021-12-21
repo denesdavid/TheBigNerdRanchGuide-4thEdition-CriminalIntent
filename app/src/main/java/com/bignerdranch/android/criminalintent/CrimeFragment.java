@@ -5,20 +5,15 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Camera;
 import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +37,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -56,6 +50,7 @@ public class CrimeFragment extends Fragment {
     private static final String DATE_FORMAT = "EEE, MMM, dd";
     private final String DIALOG_DATE = "DialogDate";
     private final String DIALOG_TIME = "DialogTime";
+    private final String DIALOG_PHOTO = "DialogPhoto";
     ActivityResultLauncher<Void> contactResultLauncher;
     ActivityResultLauncher<String> requestContactsPermissionLauncher;
     ActivityResultLauncher<Uri> cameraResultLauncher;
@@ -119,7 +114,6 @@ public class CrimeFragment extends Fragment {
             if (result){
                 updatePhotoView();
             }
-
         });
     }
 
@@ -228,7 +222,6 @@ public class CrimeFragment extends Fragment {
             } else {
                 Toast.makeText(requireContext(), "Contact is not presented at this crime.", Toast.LENGTH_LONG).show();
             }
-
         });
 
         photoButton.setOnClickListener(view -> {
@@ -242,6 +235,10 @@ public class CrimeFragment extends Fragment {
             } catch (CameraAccessException e) {
                 e.printStackTrace();
             }
+        });
+
+        photoView.setOnClickListener(view -> {
+            PhotoDetailFragment.newInstance(photoFile.getPath()).show(getParentFragmentManager(), DIALOG_PHOTO);
         });
     }
 
@@ -322,7 +319,7 @@ public class CrimeFragment extends Fragment {
     }
 
     private String getCrimeReport() {
-        String solvedString = "";
+        String solvedString;
         if (crime.isSolved()) {
             solvedString = getString(R.string.crime_report_solved);
         } else {

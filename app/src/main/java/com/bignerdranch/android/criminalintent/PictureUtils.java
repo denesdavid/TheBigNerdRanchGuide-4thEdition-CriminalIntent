@@ -21,7 +21,7 @@ public class PictureUtils {
         float srcWidth = options.outWidth;
         float srcHeight = options.outHeight;
         // Figure out how much to scale down by
-        Integer inSampleSize = 1;
+        int inSampleSize = 1;
         if (srcHeight > destHeight || srcWidth > destWidth) {
             float heightScale = srcHeight / destHeight;
             float widthScale = srcWidth / destWidth;
@@ -36,6 +36,4 @@ public class PictureUtils {
         // Read in and create final bitmap
         return BitmapFactory.decodeFile(path, options);
     }
-
-
 }

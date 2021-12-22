@@ -17,6 +17,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -68,6 +69,7 @@ public class CrimeFragment extends Fragment {
     private ImageButton photoButton;
     private ImageView photoView;
     private CrimeDetailViewModel crimeDetailViewModel;
+    private ViewTreeObserver viewTreeObserver;
 
     //endregion
 
@@ -240,6 +242,13 @@ public class CrimeFragment extends Fragment {
         photoView.setOnClickListener(view -> {
             PhotoDetailFragment.newInstance(photoFile.getPath()).show(getParentFragmentManager(), DIALOG_PHOTO);
         });
+
+
+        photoView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            updatePhotoView();
+        });
+
+
     }
 
     @Override
@@ -274,11 +283,13 @@ public class CrimeFragment extends Fragment {
     }
 
     void updatePhotoView(){
-        if (photoFile.exists()){
-            Bitmap bitmap = PictureUtils.getScaledBitmap(photoFile.getPath(), requireActivity());
-            photoView.setImageBitmap(bitmap);
-        } else {
-            photoView.setImageDrawable(null);
+        if (photoFile != null){
+            if (photoFile.exists()){
+                Bitmap bitmap = PictureUtils.getScaledBitmap(photoFile.getPath(), photoView.getWidth(), photoView.getHeight());
+                photoView.setImageBitmap(bitmap);
+            } else {
+                photoView.setImageDrawable(null);
+            }
         }
     }
 

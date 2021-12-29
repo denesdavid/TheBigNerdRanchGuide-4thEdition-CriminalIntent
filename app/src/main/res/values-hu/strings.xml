@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CriminalIntent</string>
+    <string name="crime_title_hint">Nevezd el a bűntényt.</string>
+    <string name="crime_title_label">Megnevezés</string>
+    <string name="crime_details_label">Részletek</string>
+    <string name="crime_solved_label">Megoldva</string>
+    <string name="requires_police_label">Rendőri intézkedést igényel</string>
+    <string name="new_crime">Új bűntény</string>
+    <string name="no_crimes">Nem találhatóak bűntények.</string>
+    <string name="crime_suspect_text">Gyanúsított kiválasztása</string>
+    <string name="call_suspect_text">Gyanúsított felhívása</string>
+    <string name="call_suspect_not_found">Nincs megadva gyanúsított.</string>
+    <string name="camera_not_found">Az eszközön nem található kamera.</string>
+    <string name="crime_report_text">Jelentés küldése</string>
+    <string name="crime_report">%1$s!
+A bűntény észlelésének időpontja %2$s. %3$s, és %4$s
+</string>
+    <string name="crime_report_solved">Az ügy megoldva</string>
+    <string name="crime_report_unsolved">Az ügy nincs megoldva</string>
+    <string name="crime_report_no_suspect">nincs gyanúsított.</string>
+    <string name="crime_report_suspect">a gyanúsított: %s.</string>
+    <string name="crime_report_subject">CriminalIntent bűntény jelentése</string>
+    <string name="send_report">Jelentés küldése…</string>
+    <string name="contact_police">Rendőrség hívása</string>
+    <string name="crime_date">Dátum:</string>
+    <string name="crime_title">Megnevezés:</string>
+</resources>

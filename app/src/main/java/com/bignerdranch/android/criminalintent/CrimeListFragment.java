@@ -153,7 +153,7 @@ public class CrimeListFragment extends Fragment {
             this.crime = crime;
             titleTextView.setText(this.crime.getTitle());
 
-            SimpleDateFormat dt = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.US);
+            SimpleDateFormat dt = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.getDefault());
             dateTextView.setText(dt.format(this.crime.getDate()));
 
             //dateTextView.setText(this.crime.getDate().toString());

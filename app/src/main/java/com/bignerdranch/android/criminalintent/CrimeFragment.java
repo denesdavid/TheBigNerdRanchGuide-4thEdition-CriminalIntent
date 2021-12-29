@@ -222,7 +222,7 @@ public class CrimeFragment extends Fragment {
             if (crime.getSuspect() != null && !crime.getSuspect().isEmpty()){
                 requestContactsPermissionLauncher.launch(Manifest.permission.READ_CONTACTS);
             } else {
-                Toast.makeText(requireContext(), "Contact is not presented at this crime.", Toast.LENGTH_LONG).show();
+                Toast.makeText(requireContext(), getString(R.string.call_suspect_not_found), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -232,7 +232,7 @@ public class CrimeFragment extends Fragment {
                 if (((CameraManager)requireContext().getSystemService(Context.CAMERA_SERVICE)).getCameraIdList().length > 0 ) {
                     cameraResultLauncher.launch(photoUri);
                 } else {
-                    Toast.makeText(requireContext(), "Camera is not presented on this device.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireContext(), getString(R.string.camera_not_found), Toast.LENGTH_LONG).show();
                 }
             } catch (CameraAccessException e) {
                 e.printStackTrace();
@@ -264,8 +264,8 @@ public class CrimeFragment extends Fragment {
 
     void updateUI() {
         titleField.setText(crime.getTitle());
-        SimpleDateFormat dt = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.US);
-        SimpleDateFormat dt2 = new SimpleDateFormat("HH:mm", Locale.US);
+        SimpleDateFormat dt = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.getDefault());
+        SimpleDateFormat dt2 = new SimpleDateFormat("HH:mm", Locale.getDefault());
         dateButton.setText(dt.format(this.crime.getDate()));
         timeButton.setText(dt2.format(this.crime.getDate()));
         solvedCheckBox.setChecked(crime.isSolved());

@@ -4,6 +4,12 @@
     <string name="crime_title_label">Title</string>
     <string name="crime_details_label">Details</string>
     <string name="crime_solved_label">Solved</string>
+    <string name="crime_photo_button_description">Take photo of crime scene</string>
+    <string name="crime_photo_no_image_description">
+Crime scene photo (not set)
+</string>
+    <string name="crime_photo_image_description">Crime scene photo (set)</string>
+    <string name="crime_zoomed_photo_description">Zoomed crime scene photo</string>
     <string name="requires_police_label">Requires police</string>
     <string name="new_crime">New Crime</string>
     <string name="no_crimes">There are no crimes yet.</string>

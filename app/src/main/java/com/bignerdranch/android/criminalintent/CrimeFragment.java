@@ -287,8 +287,10 @@ public class CrimeFragment extends Fragment {
             if (photoFile.exists()){
                 Bitmap bitmap = PictureUtils.getScaledBitmap(photoFile.getPath(), photoView.getWidth(), photoView.getHeight());
                 photoView.setImageBitmap(bitmap);
+                photoView.setContentDescription(getString(R.string.crime_photo_image_description));
             } else {
                 photoView.setImageDrawable(null);
+                photoView.setContentDescription(getString(R.string.crime_photo_no_image_description));
             }
         }
     }

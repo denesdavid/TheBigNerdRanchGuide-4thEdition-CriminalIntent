@@ -5,6 +5,12 @@
     <string name="crime_title_label">Megnevezés</string>
     <string name="crime_details_label">Részletek</string>
     <string name="crime_solved_label">Megoldva</string>
+    <string name="crime_photo_button_description">Fotó készítése a bűntényről</string>
+    <string name="crime_photo_no_image_description">
+Fotó a bűntényről (nincs beállítva)
+</string>
+    <string name="crime_photo_image_description">Fotó a bűntényről (beállítva)</string>
+    <string name="crime_zoomed_photo_description">Kinagyított fotó a bűntényről</string>
     <string name="requires_police_label">Rendőri intézkedést igényel</string>
     <string name="new_crime">Új bűntény</string>
     <string name="no_crimes">Nem találhatóak bűntények.</string>

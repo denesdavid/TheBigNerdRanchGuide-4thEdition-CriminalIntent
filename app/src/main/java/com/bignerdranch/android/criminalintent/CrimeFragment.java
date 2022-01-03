@@ -17,7 +17,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -69,7 +68,6 @@ public class CrimeFragment extends Fragment {
     private ImageButton photoButton;
     private ImageView photoView;
     private CrimeDetailViewModel crimeDetailViewModel;
-    private ViewTreeObserver viewTreeObserver;
 
     //endregion
 
@@ -288,9 +286,13 @@ public class CrimeFragment extends Fragment {
                 if (photoFile.exists()) {
                     Bitmap bitmap = PictureUtils.getScaledBitmap(photoFile.getPath(), photoView.getWidth(), photoView.getHeight());
                     photoView.setImageBitmap(bitmap);
+                    photoView.announceForAccessibility(
+                            getResources().getString(R.string.crime_photo_image_description));
                     photoView.setContentDescription(getString(R.string.crime_photo_image_description));
                 } else {
                     photoView.setImageDrawable(null);
+                    photoView.announceForAccessibility(
+                            getResources().getString(R.string.crime_photo_no_image_description));
                     photoView.setContentDescription(getString(R.string.crime_photo_no_image_description));
                 }
             }

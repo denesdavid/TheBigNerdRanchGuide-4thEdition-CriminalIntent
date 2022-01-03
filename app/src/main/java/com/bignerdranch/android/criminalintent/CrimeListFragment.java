@@ -156,7 +156,6 @@ public class CrimeListFragment extends Fragment {
             SimpleDateFormat dt = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.getDefault());
             dateTextView.setText(dt.format(this.crime.getDate()));
 
-            //dateTextView.setText(this.crime.getDate().toString());
             if (crime.isSolved()){
                 solvedImageView.setVisibility(View.VISIBLE);
             } else {
@@ -216,6 +215,3 @@ public class CrimeListFragment extends Fragment {
         }
     }
 }
-
-
-

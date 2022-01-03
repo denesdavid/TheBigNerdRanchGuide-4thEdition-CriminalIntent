@@ -9,6 +9,7 @@
     <string name="crime_photo_no_image_description">
 Fotó a bűntényről (nincs beállítva)
 </string>
+    <string name="crime_list_solved">Ez a bűntény már megoldott.</string>
     <string name="crime_photo_image_description">Fotó a bűntényről (beállítva)</string>
     <string name="crime_zoomed_photo_description">Kinagyított fotó a bűntényről</string>
     <string name="requires_police_label">Rendőri intézkedést igényel</string>
@@ -22,6 +23,9 @@ Fotó a bűntényről (nincs beállítva)
     <string name="crime_report">%1$s!
 A bűntény észlelésének időpontja %2$s. %3$s, és %4$s
 </string>
+    <string name="crime_requires_police_report">%1$s!
+A bűntény észlelésének időpontja %2$s. %3$s, and %4$s. %5$s.
+</string>
     <string name="crime_report_solved">Az ügy megoldva</string>
     <string name="crime_report_unsolved">Az ügy nincs megoldva</string>
     <string name="crime_report_no_suspect">nincs gyanúsított.</string>
@@ -31,4 +35,7 @@ A bűntény észlelésének időpontja %2$s. %3$s, és %4$s
     <string name="contact_police">Rendőrség hívása</string>
     <string name="crime_date">Dátum:</string>
     <string name="crime_title">Megnevezés:</string>
+    <string name="police_action_required">rendőri intézkedés szükséges</string>
+    <string name="date">Dátum</string>
+    <string name="time">Idő</string>
 </resources>

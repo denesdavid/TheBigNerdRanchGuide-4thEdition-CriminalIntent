@@ -195,6 +195,8 @@ public class CrimeListFragment extends Fragment {
            Crime currentCrime = getCurrentList().get(position);
             try {
                 holder.Bind(currentCrime);
+                String s = CrimeUtils.getCrimeReport(currentCrime, requireContext());
+                holder.itemView.setContentDescription(CrimeUtils.getCrimeReport(currentCrime, requireContext()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
